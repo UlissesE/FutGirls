@@ -1,4 +1,4 @@
-let jogadoras =
+let players =
 [
   {
     "nome": "Andressa Alves",
@@ -52,7 +52,30 @@ let jogadoras =
   }
 ];
 
-// READ
-function mostrarJogadoras() {
-    
+// CREATE
+function addPlayers() {
+
+    const playerNome = document.querySelector("#nome").value;
+    const playerPosicao = document.querySelector("#posicao").value;
+    const playerClube = document.querySelector("#clube").value;
+    const playerFotoURL = document.querySelector("#foto").value;
+
+    const playerJogos = document.querySelector("#jogos").value;
+    const playerGols = document.querySelector("#gols").value;
+    const playerAssistencias = document.querySelector("#assistencias").value;
+
+    const player = 
+    {
+        nome: playerNome,
+        posicao: playerPosicao,
+        clube: playerClube,
+        foto: playerFotoURL,
+        gols: playerGols,
+        assistencias: playerAssistencias,
+        jogos: playerJogos,
+        favorita: false
+    }
+
+    players.push(player)
+    console.log(players)
 }

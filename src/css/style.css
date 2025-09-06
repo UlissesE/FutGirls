@@ -7,3 +7,40 @@
 #foto::placeholder {
   opacity: 50%;
 }
+
+.player-card {
+  background: linear-gradient(180deg, #1e3c72, #2a5298);
+  color: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.player-card .player-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid gold;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+.player-card h5 {
+  margin: 5px 0;
+  font-weight: bold;
+}
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+.stats span {
+  font-size: 14px;
+  font-weight: bold;
+}
+.botao {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: 8px;
+}

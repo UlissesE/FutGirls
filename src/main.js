@@ -1,3 +1,5 @@
+let times = []
+
 let players = [
   {
     nome: "Andressa Alves",
@@ -97,6 +99,7 @@ function addPlayers(event) {
     };
     players.push(newPlayer);
   }
+
   mostrarAlerta("Jogadora adicionada com sucesso");
 
   resetForm();
@@ -111,6 +114,11 @@ function displayPlayers() {
   players.forEach((player, index) => {
     const playerElement = document.createElement("li");
     playerElement.classList.add("col-md-3");
+
+    if(!times.includes(player.clube)) {
+      times.push(player.clube);
+      adicionarFiltrosPorTime()
+    }
 
     const cardClass = player.favorita ? "player-card favorita" : "player-card";
 
@@ -244,3 +252,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   form.querySelector("fieldset").appendChild(cancelButton);
 });
+
+
+// Filtar por time
+function adicionarFiltrosPorTime(){
+  let listaDeFiltros = document.querySelector("#filtro-time");
+  listaDeFiltros.innerHTML = `
+    <option disabled selected>Filtrar por time</option>
+  `
+  times.forEach(time => {
+    listaDeFiltros.innerHTML += `
+      <option>${time}</option>
+    `
+  })
+}

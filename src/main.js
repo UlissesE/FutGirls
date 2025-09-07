@@ -1,4 +1,4 @@
-let times = []
+let times = [];
 
 let players = [
   {
@@ -54,6 +54,7 @@ let players = [
 ];
 
 let editandoIndex = null;
+let ordenarPorNome = false;
 
 // CREATE
 function addPlayers(event) {
@@ -113,20 +114,23 @@ function displayPlayers() {
   const playerList = document.querySelector("#lista-de-jogadoras");
   playerList.innerHTML = ``;
 
-  // Filtra jogadoras se um time estiver selecionado
   let jogadoresParaExibir = players;
   if (timeFiltrado && timeFiltrado !== "Filtrar por time") {
-    jogadoresParaExibir = players.filter(player => player.clube === timeFiltrado);
+    jogadoresParaExibir = players.filter(
+      (player) => player.clube === timeFiltrado
+    );
+  }
+
+  // Ordena por nome se ativado
+  if (ordenarPorNome) {
+    jogadoresParaExibir = [...jogadoresParaExibir].sort((a, b) =>
+      a.nome.localeCompare(b.nome)
+    );
   }
 
   jogadoresParaExibir.forEach((player, index) => {
     const playerElement = document.createElement("li");
     playerElement.classList.add("col-md-3");
-
-    if(!times.includes(player.clube)) {
-      times.push(player.clube);
-      adicionarFiltrosPorTime()
-    }
 
     const cardClass = player.favorita ? "player-card favorita" : "player-card";
 
@@ -261,22 +265,31 @@ document.addEventListener("DOMContentLoaded", function () {
   form.querySelector("fieldset").appendChild(cancelButton);
 
   // Evento para filtro de times
-  document.querySelector("#filtro-time").addEventListener("change", function () {
-    timeFiltrado = this.value;
-    displayPlayers();
-  });
+  document
+    .querySelector("#filtro-time")
+    .addEventListener("change", function () {
+      timeFiltrado = this.value;
+      displayPlayers();
+    });
+
+  // Evento para ordenar por nome
+  document
+    .querySelector("#btn-ordenar-nome")
+    .addEventListener("click", function () {
+      ordenarPorNome = !ordenarPorNome;
+      displayPlayers();
+    });
 });
 
-
 // Filtar por time
-function adicionarFiltrosPorTime(){
+function adicionarFiltrosPorTime() {
   let listaDeFiltros = document.querySelector("#filtro-time");
   listaDeFiltros.innerHTML = `
     <option selected>Filtrar por time</option>
-  `
-  times.forEach(time => {
+  `;
+  times.forEach((time) => {
     listaDeFiltros.innerHTML += `
       <option>${time}</option>
-    `
-  })
+    `;
+  });
 }

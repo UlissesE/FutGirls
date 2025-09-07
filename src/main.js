@@ -65,20 +65,19 @@ function addPlayers(event) {
   const playerGols = document.querySelector("#gols").value;
   const playerAssistencias = document.querySelector("#assistencias").value;
 
-  const player = {
-    nome: playerNome,
-    posicao: playerPosicao,
-    clube: playerClube,
-    foto: playerFotoURL,
-    gols: parseInt(playerGols),
-    assistencias: parseInt(playerAssistencias),
-    jogos: parseInt(playerJogos),
-    favorita: false,
-  };
-
   if (editandoIndex !== null) {
     // UPDATE
-    players[editandoIndex] = player;
+    players[editandoIndex] = {
+      nome: playerNome,
+      posicao: playerPosicao,
+      clube: playerClube,
+      foto: playerFotoURL,
+      gols: parseInt(playerGols),
+      assistencias: parseInt(playerAssistencias),
+      jogos: parseInt(playerJogos),
+      favorita: players[editandoIndex].favorita,
+    };
+
     mostrarAlerta("Jogadora editada com sucesso");
     editandoIndex = null;
     document.querySelector("#form-title").textContent =
@@ -87,13 +86,22 @@ function addPlayers(event) {
     document.querySelector("#cancel-edit").style.display = "none";
   } else {
     // CREATE
-    players.push(player);
+    const newPlayer = {
+      nome: playerNome,
+      posicao: playerPosicao,
+      clube: playerClube,
+      foto: playerFotoURL,
+      gols: parseInt(playerGols),
+      assistencias: parseInt(playerAssistencias),
+      jogos: parseInt(playerJogos),
+      favorita: false,
+    };
+    players.push(newPlayer);
     mostrarAlerta("Jogadora adicionada com sucesso");
   }
 
   resetForm();
   displayPlayers();
-  console.log(players);
 }
 
 // READ
@@ -106,33 +114,32 @@ function displayPlayers() {
     playerElement.classList.add("col-md-3");
 
     playerElement.innerHTML = `
-          <div class="player-card">
-            <img src="${player.foto}" class="player-img" alt="Foto de ${player.nome}" onerror="this.src='https://via.placeholder.com/150?text=Sem+Foto'">
-            <h6>${player.posicao}</h6>
-            <h5>${player.nome}</h5>
-            <p><small>${player.clube}</small></p>
-            <div class="stats">
-              <span>${player.gols} Gols</span>
-              <span>${player.assistencias} Assistências</span>
-              <span>${player.jogos} Jogos</span>
-            </div>
-            <nav class="mt-2" aria-label="Ações da jogadora ${player.nome}">
-              <button class="botao" title="Favoritar">
-                <img src="./src/img/heart-fill.svg" alt="Favoritar">
-              </button>
-              <button data-action="edit" data-index="${index}" class="botao" title="Editar">
-                <img src="./src/img/pencil-fill.svg" alt="Editar">
-              </button>
-              <button data-action="delete" data-index="${index}" class="botao" title="Excluir">
-                <img src="./src/img/trash-fill.svg" alt="Excluir">
-              </button>
-            </nav>
-          </div>
-        `;
+      <div class="player-card">
+        <img src="${player.foto}" class="player-img" alt="Foto de ${player.nome}" onerror="this.src='https://via.placeholder.com/150?text=Sem+Foto'">
+        <h6>${player.posicao}</h6>
+        <h5>${player.nome}</h5>
+        <p><small>${player.clube}</small></p>
+        <div class="stats">
+          <span>${player.gols} Gols</span>
+          <span>${player.assistencias} Assistências</span>
+          <span>${player.jogos} Jogos</span>
+        </div>
+        <nav class="mt-2" aria-label="Ações da jogadora ${player.nome}">
+          <button class="botao" title="Favoritar">
+            <img src="./src/img/heart-fill.svg" alt="Favoritar">
+          </button>
+          <button data-action="edit" data-index="${index}" class="botao" title="Editar">
+            <img src="./src/img/pencil-fill.svg" alt="Editar">
+          </button>
+          <button data-action="delete" data-index="${index}" class="botao" title="Excluir">
+            <img src="./src/img/trash-fill.svg" alt="Excluir">
+          </button>
+        </nav>
+      </div>
+    `;
     playerList.appendChild(playerElement);
   });
 
-  // Add event listeners aos botões de editar e excluir
   document.querySelectorAll('[data-action="edit"]').forEach((button) => {
     button.addEventListener("click", function () {
       const index = this.getAttribute("data-index");
@@ -148,9 +155,10 @@ function displayPlayers() {
   });
 }
 
-// UPDATE forms
+// UPDATE
 function editPlayer(index) {
   const player = players[index];
+
   document.querySelector("#nome").value = player.nome;
   document.querySelector("#posicao").value = player.posicao;
   document.querySelector("#clube").value = player.clube;
@@ -173,7 +181,6 @@ function deletePlayer(index) {
     players.splice(index, 1);
     mostrarAlerta("Jogadora removida com sucesso");
     displayPlayers();
-    console.log(players);
   }
 }
 
@@ -191,59 +198,35 @@ function resetForm() {
 // Alerta de Feedback
 function mostrarAlerta(mensagem) {
   let alertContainer = document.querySelector("#alert-container");
+  alertContainer.style.display = "block";
+  document.querySelector("#alert-message").textContent = mensagem;
 
-  if (!alertContainer) {
-    alertContainer = document.createElement("div");
-    alertContainer.id = "alert-container";
-    alertContainer.className = "container mt-3";
-    document.querySelector("main").prepend(alertContainer);
-  }
-
-  alertContainer.innerHTML = `
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      ${mensagem}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  `;
-
-  // Remover alerta automaticamente após 3 segundos
   setTimeout(() => {
-    const alert = alertContainer.querySelector(".alert");
-    if (alert) {
-      const bsAlert = new bootstrap.Alert(alert);
-      bsAlert.close();
-    }
+    alertContainer.style.display = "none";
   }, 3000);
 }
 
 // Iniciando
 document.addEventListener("DOMContentLoaded", function () {
   displayPlayers();
+  document.querySelector("#form").addEventListener("submit", addPlayers);
 
-  document.querySelector("form").addEventListener("submit", addPlayers);
+  const form = document.querySelector("#form");
+  const cancelButton = document.createElement("button");
+  cancelButton.type = "button";
+  cancelButton.className = "btn btn-secondary w-100 p-3 mt-2";
+  cancelButton.textContent = "Cancelar Edição";
+  cancelButton.id = "cancel-edit";
+  cancelButton.style.display = "none";
 
-  // Criar botão de cancelar edição
-  const form = document.querySelector("form");
-  let cancelButton = document.querySelector("#cancel-edit");
+  cancelButton.addEventListener("click", function () {
+    resetForm();
+    editandoIndex = null;
+    document.querySelector("#form-title").textContent =
+      "Adicionar nova jogadora";
+    document.querySelector("#submit-button").textContent = "Adicionar Jogadora";
+    this.style.display = "none";
+  });
 
-  if (!cancelButton) {
-    cancelButton = document.createElement("button");
-    cancelButton.type = "button";
-    cancelButton.className = "btn btn-secondary w-100 p-3 mt-2";
-    cancelButton.textContent = "Cancelar Edição";
-    cancelButton.id = "cancel-edit";
-    cancelButton.style.display = "none";
-
-    cancelButton.addEventListener("click", function () {
-      resetForm();
-      editandoIndex = null;
-      document.querySelector("#form-title").textContent =
-        "Adicionar nova jogadora";
-      document.querySelector("#submit-button").textContent =
-        "Adicionar Jogadora";
-      this.style.display = "none";
-    });
-
-    form.querySelector("fieldset").appendChild(cancelButton);
-  }
+  form.querySelector("fieldset").appendChild(cancelButton);
 });

@@ -3,7 +3,7 @@ let ordenarPorNome = false;
 let timeFiltrado = null;
 
 let times = [];
-let players = JSON.parse(localStorage.getItem('jogadoras')) || [
+let players = JSON.parse(localStorage.getItem("jogadoras")) || [
   {
     nome: "Andressa Alves",
     posicao: "Meio-campo",
@@ -135,7 +135,7 @@ function addPlayers(event) {
       favorita: false,
     };
     players.push(newPlayer);
-    localStorage.setItem('jogadoras', JSON.stringify(players))
+    localStorage.setItem("jogadoras", JSON.stringify(players));
   }
 
   mostrarAlerta("Jogadora adicionada com sucesso");
@@ -153,12 +153,6 @@ function displayPlayers() {
   if (timeFiltrado && timeFiltrado !== "Filtrar por time") {
     jogadoresParaExibir = players.filter(
       (player) => player.clube === timeFiltrado
-    );
-  }
-
-  if (ordenarPorNome) {
-    jogadoresParaExibir = [...jogadoresParaExibir].sort((a, b) =>
-      a.nome.localeCompare(b.nome)
     );
   }
 
@@ -247,7 +241,7 @@ function editPlayer(index) {
 function deletePlayer(index) {
   if (confirm("Tem certeza que deseja excluir esta jogadora?")) {
     players.splice(index, 1);
-    localStorage.setItem('jogadoras', JSON.stringify(players))
+    localStorage.setItem("jogadoras", JSON.stringify(players));
     mostrarAlerta("Jogadora removida com sucesso");
     alert("Jogadora Removida com sucesso");
     displayPlayers();
@@ -302,6 +296,11 @@ document.addEventListener("DOMContentLoaded", function () {
     .querySelector("#btn-ordenar-nome")
     .addEventListener("click", function () {
       ordenarPorNome = !ordenarPorNome;
+      if (ordenarPorNome) {
+        players.sort((a, b) => a.nome.localeCompare(b.nome));
+      } else {
+        players.sort((a, b) => b.nome.localeCompare(a.nome));
+      }
       displayPlayers();
     });
 });

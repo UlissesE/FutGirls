@@ -95,6 +95,7 @@ function addPlayers(event) {
     playerNome === "" ||
     playerPosicao === "" ||
     playerClube === "" ||
+    playerFotoURL === "" ||
     isNaN(playerJogos) ||
     playerJogos === "" ||
     isNaN(playerGols) ||
@@ -102,8 +103,8 @@ function addPlayers(event) {
     isNaN(playerAssistencias) ||
     playerAssistencias === ""
   ) {
-    mostrarAlerta("Jogos, gols e assistências devem ser números.");
-    alert("Jogos, gols e assistências devem ser números.");
+    mostrarAlerta("Formulário inválido. Verefique se digitou errôneamente em algum campo.");
+    alert("Formulário inválido. Verefique se digitou errôneamente em algum campo.");
     return;
   }
 

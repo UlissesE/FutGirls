@@ -56,6 +56,16 @@
   font-style: italic;
 }
 
+.player-card.favorita {
+  background: linear-gradient(135deg, #FFD700 60%, #FFF8DC 100%);
+  border: 2px solid #FFD700;
+  color: black;
+}
+.player-card.favorita p small {
+  color: black;
+  font-style: italic;
+}
+
 .stats {
   display: flex;
   justify-content: space-around;

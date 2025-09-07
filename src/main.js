@@ -78,7 +78,6 @@ function addPlayers(event) {
       favorita: players[editandoIndex].favorita,
     };
 
-    mostrarAlerta("Jogadora editada com sucesso");
     editandoIndex = null;
     document.querySelector("#form-title").textContent =
       "Adicionar nova jogadora";
@@ -97,8 +96,8 @@ function addPlayers(event) {
       favorita: false,
     };
     players.push(newPlayer);
-    mostrarAlerta("Jogadora adicionada com sucesso");
   }
+  mostrarAlerta("Jogadora adicionada com sucesso");
 
   resetForm();
   displayPlayers();
@@ -113,9 +112,11 @@ function displayPlayers() {
     const playerElement = document.createElement("li");
     playerElement.classList.add("col-md-3");
 
+    const cardClass = player.favorita ? "player-card favorita" : "player-card";
+
     playerElement.innerHTML = `
-      <div class="player-card">
-        <img src="${player.foto}" class="player-img" alt="Foto de ${player.nome}" onerror="this.src='https://via.placeholder.com/150?text=Sem+Foto'">
+      <div class="${cardClass}">
+        <img src="${player.foto}" class="player-img" alt="Foto de ${player.nome}">
         <h6>${player.posicao}</h6>
         <h5>${player.nome}</h5>
         <p><small>${player.clube}</small></p>
@@ -125,8 +126,8 @@ function displayPlayers() {
           <span>${player.jogos} Jogos</span>
         </div>
         <nav class="mt-2" aria-label="Ações da jogadora ${player.nome}">
-          <button class="botao" title="Favoritar">
-            <img src="./src/img/heart-fill.svg" alt="Favoritar">
+          <button class="botao" title="Favoritar" data-action="favoritar" data-index="${index}">
+            <img src="./src/img/heart.svg" alt="Favoritar">
           </button>
           <button data-action="edit" data-index="${index}" class="botao" title="Editar">
             <img src="./src/img/pencil-fill.svg" alt="Editar">
@@ -140,6 +141,7 @@ function displayPlayers() {
     playerList.appendChild(playerElement);
   });
 
+  // Editar
   document.querySelectorAll('[data-action="edit"]').forEach((button) => {
     button.addEventListener("click", function () {
       const index = this.getAttribute("data-index");
@@ -147,12 +149,26 @@ function displayPlayers() {
     });
   });
 
+  // Deletar
   document.querySelectorAll('[data-action="delete"]').forEach((button) => {
     button.addEventListener("click", function () {
       const index = this.getAttribute("data-index");
       deletePlayer(index);
     });
   });
+
+  // Favoritar
+  document.querySelectorAll('[data-action="favoritar"]').forEach((button) => {
+    button.addEventListener("click", function () {
+      const index = this.getAttribute("data-index");
+      alterarFavorito(index);
+    });
+  });
+}
+
+function alterarFavorito(index) {
+  players[index].favorita = !players[index].favorita;
+  displayPlayers();
 }
 
 // UPDATE
@@ -171,8 +187,6 @@ function editPlayer(index) {
   document.querySelector("#form-title").textContent = "Editar Jogadora";
   document.querySelector("#submit-button").textContent = "Salvar Alterações";
   document.querySelector("#cancel-edit").style.display = "block";
-
-  document.querySelector("form").scrollIntoView({ behavior: "smooth" });
 }
 
 // DELETE

@@ -3,7 +3,7 @@ let ordenarPorNome = false;
 let timeFiltrado = null;
 
 let times = [];
-let players = [
+let players = JSON.parse(localStorage.getItem('jogadoras')) || [
   {
     nome: "Andressa Alves",
     posicao: "Meio-campo",
@@ -135,6 +135,7 @@ function addPlayers(event) {
       favorita: false,
     };
     players.push(newPlayer);
+    localStorage.setItem('jogadoras', JSON.stringify(players))
   }
 
   mostrarAlerta("Jogadora adicionada com sucesso");
@@ -246,6 +247,7 @@ function editPlayer(index) {
 function deletePlayer(index) {
   if (confirm("Tem certeza que deseja excluir esta jogadora?")) {
     players.splice(index, 1);
+    localStorage.setItem('jogadoras', JSON.stringify(players))
     mostrarAlerta("Jogadora removida com sucesso");
     alert("Jogadora Removida com sucesso");
     displayPlayers();

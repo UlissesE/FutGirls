@@ -155,3 +155,7 @@ ul {
   background: none;
   animation: none;
 }
+
+#alert-container {
+  display: none;
+}

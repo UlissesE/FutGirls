@@ -56,7 +56,6 @@ let players = [
   },
 ];
 
-
 // Funções utilitárias
 function resetForm() {
   document.querySelector("#nome").value = "";
@@ -90,6 +89,23 @@ function addPlayers(event) {
   const playerGols = document.querySelector("#gols").value;
   const playerAssistencias = document.querySelector("#assistencias").value;
 
+  // Validação: apenas números
+  if (
+    playerNome === "" ||
+    playerPosicao === "" ||
+    playerClube === "" ||
+    isNaN(playerJogos) ||
+    playerJogos === "" ||
+    isNaN(playerGols) ||
+    playerGols === "" ||
+    isNaN(playerAssistencias) ||
+    playerAssistencias === ""
+  ) {
+    mostrarAlerta("Jogos, gols e assistências devem ser números.");
+    alert("Jogos, gols e assistências devem ser números.");
+    return;
+  }
+
   if (editandoIndex !== null) {
     players[editandoIndex] = {
       nome: playerNome,
@@ -122,6 +138,7 @@ function addPlayers(event) {
   }
 
   mostrarAlerta("Jogadora adicionada com sucesso");
+  alert("Jogadora adicionada com sucesso");
   resetForm();
   displayPlayers();
 }
@@ -229,6 +246,7 @@ function deletePlayer(index) {
   if (confirm("Tem certeza que deseja excluir esta jogadora?")) {
     players.splice(index, 1);
     mostrarAlerta("Jogadora removida com sucesso");
+    alert("Jogadora Removida com sucesso");
     displayPlayers();
   }
 }

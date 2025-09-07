@@ -8,7 +8,7 @@ let players = [
     nome: "Andressa Alves",
     posicao: "Meio-campo",
     clube: "Corinthians",
-    foto: "https://example.com/andressa.jpg",
+    foto: "https://cdn.media-acidadeon.com.br/tudoep/wp-content/uploads/sites/10/2024/12/AndressaAlves-SamRoblesCBF_2024-12-13_18-24-33_jpg_2024-12-13_18-24-33.webp",
     gols: 15,
     assistencias: 10,
     jogos: 28,
@@ -18,7 +18,7 @@ let players = [
     nome: "Dayana Rodríguez",
     posicao: "Meio-campo",
     clube: "Corinthians",
-    foto: "https://example.com/dayana.jpg",
+    foto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdIqAN_3AvftCArwguInUx3N862HtMjgshtQ&s",
     gols: 5,
     assistencias: 12,
     jogos: 30,
@@ -28,7 +28,7 @@ let players = [
     nome: "Mariza",
     posicao: "Zagueira",
     clube: "Corinthians",
-    foto: "https://example.com/mariza.jpg",
+    foto: "https://www.ogol.com.br/img/jogadores/new/64/05/526405_mariza_20250723194000.png",
     gols: 2,
     assistencias: 1,
     jogos: 32,
@@ -38,7 +38,7 @@ let players = [
     nome: "Thaís Regina",
     posicao: "Zagueira",
     clube: "Corinthians",
-    foto: "https://example.com/thais.jpg",
+    foto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTb45soFQKI8Xi1u0fVoqjpfWxxClfDcXyTg&s",
     gols: 1,
     assistencias: 2,
     jogos: 25,
@@ -48,7 +48,7 @@ let players = [
     nome: "Letícia Teles",
     posicao: "Zagueira",
     clube: "Corinthians",
-    foto: "https://example.com/leticia.jpg",
+    foto: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShALpklHWtciYlEVNHUL6kIOPNW58Kdyz8qg&s",
     gols: 0,
     assistencias: 0,
     jogos: 18,
@@ -166,6 +166,7 @@ function displayPlayers() {
     playerElement.classList.add("col-md-3");
 
     const cardClass = player.favorita ? "player-card favorita" : "player-card";
+    const favorite = player.favorita ? "heart-fill" : "heart";
 
     playerElement.innerHTML = `
       <div class="${cardClass}">
@@ -180,7 +181,7 @@ function displayPlayers() {
         </div>
         <nav class="mt-2" aria-label="Ações da jogadora ${player.nome}">
           <button class="botao" title="Favoritar" data-action="favoritar" data-index="${index}">
-            <img src="./src/img/heart.svg" alt="Favoritar">
+            <img src="./src/img/${favorite}.svg" alt="Favoritar">
           </button>
           <button data-action="edit" data-index="${index}" class="botao" title="Editar">
             <img src="./src/img/pencil-fill.svg" alt="Editar">

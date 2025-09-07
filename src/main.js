@@ -1,6 +1,7 @@
-let editandoIndex = null;
+let termoBusca = "";
 let ordenarPorNome = false;
 let timeFiltrado = null;
+let editandoIndex = null;
 
 let times = [];
 let players = JSON.parse(localStorage.getItem("jogadoras")) || [
@@ -144,15 +145,28 @@ function addPlayers(event) {
   displayPlayers();
 }
 
+
 // READ: Exibe jogadoras na tela
 function displayPlayers() {
   const playerList = document.querySelector("#lista-de-jogadoras");
   playerList.innerHTML = ``;
 
   let jogadoresParaExibir = players;
+
+  // Filtro por time
   if (timeFiltrado && timeFiltrado !== "Filtrar por time") {
-    jogadoresParaExibir = players.filter(
+    jogadoresParaExibir = jogadoresParaExibir.filter(
       (player) => player.clube === timeFiltrado
+    );
+  }
+
+  // Filtro por busca (nome ou posição)
+  if (termoBusca && termoBusca.trim() !== "") {
+    const buscaLower = termoBusca.trim().toLowerCase();
+    jogadoresParaExibir = jogadoresParaExibir.filter(
+      (player) =>
+        player.nome.toLowerCase().includes(buscaLower) ||
+        player.posicao.toLowerCase().includes(buscaLower)
     );
   }
 
@@ -160,9 +174,9 @@ function displayPlayers() {
     const playerElement = document.createElement("li");
     playerElement.classList.add("col-md-3");
 
-    if(!times.includes(player.clube)) {
+    if (!times.includes(player.clube)) {
       times.push(player.clube);
-      adicionarFiltrosPorTime()
+      adicionarFiltrosPorTime();
     }
     const cardClass = player.favorita ? "player-card favorita" : "player-card";
     const favorite = player.favorita ? "heart-fill" : "heart";
@@ -305,6 +319,13 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         players.sort((a, b) => b.nome.localeCompare(a.nome));
       }
+      displayPlayers();
+    });
+
+  document
+    .querySelector("#busca-jogadora")
+    .addEventListener("input", function () {
+      termoBusca = this.value;
       displayPlayers();
     });
 });

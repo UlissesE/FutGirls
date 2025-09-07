@@ -160,6 +160,10 @@ function displayPlayers() {
     const playerElement = document.createElement("li");
     playerElement.classList.add("col-md-3");
 
+    if(!times.includes(player.clube)) {
+      times.push(player.clube);
+      adicionarFiltrosPorTime()
+    }
     const cardClass = player.favorita ? "player-card favorita" : "player-card";
     const favorite = player.favorita ? "heart-fill" : "heart";
 

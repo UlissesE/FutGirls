@@ -107,11 +107,19 @@ function addPlayers(event) {
 }
 
 // READ
+let timeFiltrado = null;
+
 function displayPlayers() {
   const playerList = document.querySelector("#lista-de-jogadoras");
   playerList.innerHTML = ``;
 
-  players.forEach((player, index) => {
+  // Filtra jogadoras se um time estiver selecionado
+  let jogadoresParaExibir = players;
+  if (timeFiltrado && timeFiltrado !== "Filtrar por time") {
+    jogadoresParaExibir = players.filter(player => player.clube === timeFiltrado);
+  }
+
+  jogadoresParaExibir.forEach((player, index) => {
     const playerElement = document.createElement("li");
     playerElement.classList.add("col-md-3");
 
@@ -251,6 +259,12 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   form.querySelector("fieldset").appendChild(cancelButton);
+
+  // Evento para filtro de times
+  document.querySelector("#filtro-time").addEventListener("change", function () {
+    timeFiltrado = this.value;
+    displayPlayers();
+  });
 });
 
 
@@ -258,7 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function adicionarFiltrosPorTime(){
   let listaDeFiltros = document.querySelector("#filtro-time");
   listaDeFiltros.innerHTML = `
-    <option disabled selected>Filtrar por time</option>
+    <option selected>Filtrar por time</option>
   `
   times.forEach(time => {
     listaDeFiltros.innerHTML += `

@@ -1,5 +1,8 @@
-let times = [];
+let editandoIndex = null;
+let ordenarPorNome = false;
+let timeFiltrado = null;
 
+let times = [];
 let players = [
   {
     nome: "Andressa Alves",
@@ -53,10 +56,29 @@ let players = [
   },
 ];
 
-let editandoIndex = null;
-let ordenarPorNome = false;
 
-// CREATE
+// Funções utilitárias
+function resetForm() {
+  document.querySelector("#nome").value = "";
+  document.querySelector("#posicao").value = "";
+  document.querySelector("#clube").value = "";
+  document.querySelector("#foto").value = "";
+  document.querySelector("#jogos").value = "";
+  document.querySelector("#gols").value = "";
+  document.querySelector("#assistencias").value = "";
+}
+
+function mostrarAlerta(mensagem) {
+  let alertContainer = document.querySelector("#alert-container");
+  alertContainer.style.display = "block";
+  document.querySelector("#alert-message").textContent = mensagem;
+
+  setTimeout(() => {
+    alertContainer.style.display = "none";
+  }, 3000);
+}
+
+// CREATE / UPDADE: Adiciona ou edita jogadora
 function addPlayers(event) {
   event.preventDefault();
 
@@ -69,7 +91,6 @@ function addPlayers(event) {
   const playerAssistencias = document.querySelector("#assistencias").value;
 
   if (editandoIndex !== null) {
-    // UPDATE
     players[editandoIndex] = {
       nome: playerNome,
       posicao: playerPosicao,
@@ -87,7 +108,6 @@ function addPlayers(event) {
     document.querySelector("#submit-button").textContent = "Adicionar Jogadora";
     document.querySelector("#cancel-edit").style.display = "none";
   } else {
-    // CREATE
     const newPlayer = {
       nome: playerNome,
       posicao: playerPosicao,
@@ -102,14 +122,11 @@ function addPlayers(event) {
   }
 
   mostrarAlerta("Jogadora adicionada com sucesso");
-
   resetForm();
   displayPlayers();
 }
 
-// READ
-let timeFiltrado = null;
-
+// READ: Exibe jogadoras na tela
 function displayPlayers() {
   const playerList = document.querySelector("#lista-de-jogadoras");
   playerList.innerHTML = ``;
@@ -121,7 +138,6 @@ function displayPlayers() {
     );
   }
 
-  // Ordena por nome se ativado
   if (ordenarPorNome) {
     jogadoresParaExibir = [...jogadoresParaExibir].sort((a, b) =>
       a.nome.localeCompare(b.nome)
@@ -161,7 +177,7 @@ function displayPlayers() {
     playerList.appendChild(playerElement);
   });
 
-  // Editar
+  // Eventos dos botões de ação
   document.querySelectorAll('[data-action="edit"]').forEach((button) => {
     button.addEventListener("click", function () {
       const index = this.getAttribute("data-index");
@@ -169,7 +185,6 @@ function displayPlayers() {
     });
   });
 
-  // Deletar
   document.querySelectorAll('[data-action="delete"]').forEach((button) => {
     button.addEventListener("click", function () {
       const index = this.getAttribute("data-index");
@@ -177,7 +192,6 @@ function displayPlayers() {
     });
   });
 
-  // Favoritar
   document.querySelectorAll('[data-action="favoritar"]').forEach((button) => {
     button.addEventListener("click", function () {
       const index = this.getAttribute("data-index");
@@ -186,12 +200,13 @@ function displayPlayers() {
   });
 }
 
+// UPDATE: Alterna o status de favorita
 function alterarFavorito(index) {
   players[index].favorita = !players[index].favorita;
   displayPlayers();
 }
 
-// UPDATE
+// UPDATE: Preenche formulário para edição
 function editPlayer(index) {
   const player = players[index];
 
@@ -209,7 +224,7 @@ function editPlayer(index) {
   document.querySelector("#cancel-edit").style.display = "block";
 }
 
-// DELETE
+// DELETE: Remove jogadora do array
 function deletePlayer(index) {
   if (confirm("Tem certeza que deseja excluir esta jogadora?")) {
     players.splice(index, 1);
@@ -218,29 +233,20 @@ function deletePlayer(index) {
   }
 }
 
-// Reset Forms
-function resetForm() {
-  document.querySelector("#nome").value = "";
-  document.querySelector("#posicao").value = "";
-  document.querySelector("#clube").value = "";
-  document.querySelector("#foto").value = "";
-  document.querySelector("#jogos").value = "";
-  document.querySelector("#gols").value = "";
-  document.querySelector("#assistencias").value = "";
+// Atualiza opções do filtro de times
+function adicionarFiltrosPorTime() {
+  let listaDeFiltros = document.querySelector("#filtro-time");
+  listaDeFiltros.innerHTML = `
+    <option selected>Filtrar por time</option>
+  `;
+  times.forEach((time) => {
+    listaDeFiltros.innerHTML += `
+      <option>${time}</option>
+    `;
+  });
 }
 
-// Alerta de Feedback
-function mostrarAlerta(mensagem) {
-  let alertContainer = document.querySelector("#alert-container");
-  alertContainer.style.display = "block";
-  document.querySelector("#alert-message").textContent = mensagem;
-
-  setTimeout(() => {
-    alertContainer.style.display = "none";
-  }, 3000);
-}
-
-// Iniciando
+// Inicialização dos eventos e botões
 document.addEventListener("DOMContentLoaded", function () {
   displayPlayers();
   document.querySelector("#form").addEventListener("submit", addPlayers);
@@ -264,7 +270,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   form.querySelector("fieldset").appendChild(cancelButton);
 
-  // Evento para filtro de times
   document
     .querySelector("#filtro-time")
     .addEventListener("change", function () {
@@ -272,7 +277,6 @@ document.addEventListener("DOMContentLoaded", function () {
       displayPlayers();
     });
 
-  // Evento para ordenar por nome
   document
     .querySelector("#btn-ordenar-nome")
     .addEventListener("click", function () {
@@ -280,16 +284,3 @@ document.addEventListener("DOMContentLoaded", function () {
       displayPlayers();
     });
 });
-
-// Filtar por time
-function adicionarFiltrosPorTime() {
-  let listaDeFiltros = document.querySelector("#filtro-time");
-  listaDeFiltros.innerHTML = `
-    <option selected>Filtrar por time</option>
-  `;
-  times.forEach((time) => {
-    listaDeFiltros.innerHTML += `
-      <option>${time}</option>
-    `;
-  });
-}
